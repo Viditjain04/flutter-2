@@ -21,16 +21,47 @@ class RandomWords extends StatefulWidget {
 class RandomWordsState extends State<RandomWords> {
   // a state always need a build widget
   final List<WordPair> _suggestions = <WordPair>[]; //list
-  final Set<WordPair> _save = Set<WordPair>(); //set
+  final Set<WordPair> _saved = Set<WordPair>(); //set
   final TextStyle _biggerFont = const TextStyle(fontSize: 18.0); //Object
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Suggestion Text'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.list),
+            onPressed: _pushSaved,
+          ),
+        ],
       ),
       body: _buildSuggestions(),
     );
+  }
+
+  void _pushSaved() {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      final Iterable<ListTile> titles = _saved.map((WordPair pair) {
+        return ListTile(
+          title: Text(
+            pair.asPascalCase,
+            style: _biggerFont,
+          ),
+        );
+      });
+      final List<Widget> divided = ListTile.divideTiles(
+        context: context,
+        tiles: titles,
+      ).toList();
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Save suggestion'),
+        ),
+        body: ListView(children: divided),
+      );
+    }));
   }
 
   Widget _buildSuggestions() {
@@ -50,7 +81,7 @@ class RandomWordsState extends State<RandomWords> {
 
   Widget _buildRow(WordPair pair) {
     //pair is WordPair
-    final bool alreadySaved = _save.contains(pair);
+    final bool alreadySaved = _saved.contains(pair);
     return ListTile(
       title: Text(
         pair.asPascalCase,
@@ -60,6 +91,15 @@ class RandomWordsState extends State<RandomWords> {
         alreadySaved ? Icons.favorite : Icons.favorite_border,
         color: alreadySaved ? Colors.red : null,
       ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
     );
   }
 }
