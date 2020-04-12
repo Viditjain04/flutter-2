@@ -6,10 +6,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   //stateless immutable
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "homepage",
-      home: RandomWords()
-    );
+    return MaterialApp(title: "homepage", home: RandomWords());
   }
 }
 
@@ -23,8 +20,9 @@ class RandomWords extends StatefulWidget {
 
 class RandomWordsState extends State<RandomWords> {
   // a state always need a build widget
-  final _suggestions = <WordPair>[];
-  final _biggerFont = const TextStyle(fontSize: 18.0);
+  final List<WordPair> _suggestions = <WordPair>[]; //list
+  final Set<WordPair> _save = Set<WordPair>(); //set
+  final TextStyle _biggerFont = const TextStyle(fontSize: 18.0); //Object
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +33,7 @@ class RandomWordsState extends State<RandomWords> {
     );
   }
 
-  Widget _buildSuggestions(){
+  Widget _buildSuggestions() {
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
       itemBuilder: (BuildContext context, int index) {
@@ -47,14 +45,20 @@ class RandomWordsState extends State<RandomWords> {
         }
         return _buildRow(_suggestions[currentIndex]);
       },
-    ); 
+    );
   }
 
   Widget _buildRow(WordPair pair) {
+    //pair is WordPair
+    final bool alreadySaved = _save.contains(pair);
     return ListTile(
       title: Text(
         pair.asPascalCase,
         style: _biggerFont,
+      ),
+      trailing: Icon(
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
       ),
     );
   }
