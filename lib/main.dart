@@ -56,8 +56,10 @@ class RandomWordsState extends State<RandomWords> {
       ).toList();
 
       return Scaffold(
+         drawer: Drawer(child:UserAccountsDrawerHeader(accountName: Text('xyz'),arrowColor: Colors.black,currentAccountPicture: CircleAvatar(child: Text('V'),),),),
+        
         appBar: AppBar(
-          title: Text('Save suggestion'),
+          title: Text('Save suggestions',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontSize: 22.0),),
         ),
         body: ListView(children: divided),
       );
